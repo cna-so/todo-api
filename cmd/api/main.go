@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/cna-so/todo-api/controllers/routes"
+	"log"
+	"net/http"
 	"os"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 
 	"github.com/cna-so/todo-api/initializers"
 )
@@ -15,8 +15,13 @@ func init() {
 }
 
 func main() {
-	app := fiber.New()
-	app.Use(logger.New())
+	server := http.Server{
+		Addr:    os.Getenv("port"),
+		Handler: routes.Routes(),
+	}
 	fmt.Printf("start server on port %s", os.Getenv("port"))
-	app.Listen(os.Getenv("port"))
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
