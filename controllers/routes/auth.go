@@ -16,6 +16,7 @@ func Routes() *gin.Engine {
 			"message": "ok",
 		})
 	})
+
 	// authorization (login - register )
 	_ = router.Group("/api/v1/auth")
 	return router
