@@ -1,3 +1,5 @@
 build/
 .env
 .idea/
+bin/
+tmp/

@@ -1,8 +1,11 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/cna-so/todo-api/controllers/handlers"
 )
 
 func Routes() *gin.Engine {
@@ -18,6 +21,7 @@ func Routes() *gin.Engine {
 	})
 
 	// authorization (login - register )
-	_ = router.Group("/api/v1/auth")
+	auth := router.Group("/api/v1/auth")
+	auth.POST("/create", handlers.CreateUserHandler)
 	return router
 }

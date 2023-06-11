@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/cna-so/todo-api/controllers/routes"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/cna-so/todo-api/controllers/routes"
 	"github.com/cna-so/todo-api/initializers"
 )
 
