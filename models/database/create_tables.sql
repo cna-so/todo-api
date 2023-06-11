@@ -3,8 +3,8 @@ CREATE TABLE users (
   first_name VARCHAR(24),
   last_name VARCHAR(64),
   email VARCHAR(150) NOT NULL UNIQUE,
-  password VARCHAR(32) NOT NULL,
-  role VARCHAR(1),
-  created_at DATE,
-  updated_at DATE
+  password TEXT NOT NULL,
+  role VARCHAR(1) DEFAULT 'U',
+  created_at TIMESTAMP DEFAULT Now(),
+  updated_at TIMESTAMP DEFAULT Now()
 );

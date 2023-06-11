@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/cna-so/todo-api/initializers"
 )
 
@@ -14,14 +16,15 @@ type UserModels struct {
 	Email     string    `json:"email" binding:"required"`
 	Password  string    `json:"password" binding:"required"`
 	Role      string    `json:"role,omitempty"`
-	CreateAt  time.Time `json:"create_at,omitempty"`
-	UpdateAt  time.Time `json:"update_at,omitempty"`
+	CreateAt  time.Time `json:"created_at,omitempty"`
+	UpdateAt  time.Time `json:"updated_at,omitempty"`
 }
 
 func (u *UserModels) CreateUserAccount() (status int, err error) {
 	_, err = initializers.Db.Exec(`INSERT INTO users
-	(user_uid ,first_name ,last_name , email ,password, role , create_at , update_at)
-	VALUES ($1,$2,$3,$4,$5,$6,$7)`, u.UserUID, u.FirstName, u.LastName, u.Email, u.Password, u.Role, u.CreateAt, u.UpdateAt)
+	(user_uid ,first_name ,last_name , email ,password, role)
+	VALUES ($1,$2,$3,$4,$5,$6)`,
+		uuid.New(), u.FirstName, u.LastName, u.Email, u.Password, "U") // role is defualt to user we have S as superuser and A as admin
 	if err != nil {
 		return http.StatusForbidden, err
 	}
