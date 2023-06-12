@@ -17,7 +17,7 @@ type UserApi struct {
 }
 
 func (us *UserApi) CreateUserAccount(ctx *gin.Context) {
-	var userDto dto.UserRequestDto
+	var userDto dto.UserSignUpRequestDto
 	err := ctx.ShouldBindJSON(&userDto)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
@@ -34,18 +34,41 @@ func (us *UserApi) CreateUserAccount(ctx *gin.Context) {
 		LastName:  userDto.LastName,
 		Role:      "U",
 	}
-	mUser, err := us.s.SignUpUser(user)
-	if err != nil {
+	if mUser, err := us.s.SignUpUser(user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
 			"message": err.Error(),
 		})
 		return
+	} else {
+		ctx.JSON(http.StatusCreated, gin.H{
+			"message": fmt.Sprintf("user with email : `%s` successfully created ", mUser.Email),
+		})
 	}
-	ctx.JSON(http.StatusCreated, gin.H{
-		"message": fmt.Sprintf("user with email : `%s` successfully created ", mUser.Email),
-	})
 }
 
 func (us *UserApi) SignInUser(ctx *gin.Context) {
-
+	var userDto dto.UserSignInRequest
+	err := ctx.ShouldBindJSON(&userDto)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
+			"message": "email and password are require",
+		})
+		return
+	}
+	if user, err := us.s.SignInUser(userDto); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
+			"message": err.Error(),
+		})
+		return
+	} else {
+		ctx.JSON(http.StatusOK, gin.H{
+			"user": dto.UserSignInResponseDto{
+				ID:        user.ID,
+				Email:     user.Email,
+				Password:  user.Password,
+				FirstName: user.FirstName,
+				LastName:  user.LastName,
+			},
+		})
+	}
 }
