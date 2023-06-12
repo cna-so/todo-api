@@ -20,6 +20,6 @@ func Routes() *gin.Engine {
 
 	// authorization (login - register )
 	auth := router.Group("/api/v1/auth")
-	auth.POST("/create", CreateUserHandler)
+	auth.POST("/create", CreateUserAccount)
 	return router
 }

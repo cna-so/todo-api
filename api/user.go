@@ -12,7 +12,7 @@ import (
 	"github.com/cna-so/todo-api/helpers"
 )
 
-func CreateUserHandler(ctx *gin.Context) {
+func CreateUserAccount(ctx *gin.Context) {
 	var userDto dto.UserRequestDto
 	err := ctx.ShouldBindJSON(&userDto)
 	if err != nil {
@@ -29,6 +29,13 @@ func CreateUserHandler(ctx *gin.Context) {
 		LastName:  userDto.LastName,
 		Role:      "U",
 	}
-	res := initializers.Db.Create(&user)
-	fmt.Println(res)
+	if err := initializers.Db.Create(&user).Error; err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{
+		"message": fmt.Sprintf("user with email : `%s` successfully created ", user.Email),
+	})
 }
