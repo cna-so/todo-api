@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/cna-so/todo-api/controllers/jwt"
 	"gorm.io/gorm"
 	"net/http"
 
@@ -25,5 +26,8 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	auth := router.Group("/api/v1/auth")
 	auth.POST("/signup", userApi.CreateUserAccount)
 	auth.POST("/login", userApi.SignInUser)
+	auth.GET("/check", jwt.RequireLogin, func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, "login")
+	})
 	return router
 }

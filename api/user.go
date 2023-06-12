@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"github.com/cna-so/todo-api/controllers/jwt"
 	"github.com/cna-so/todo-api/models/DTO"
 	"github.com/cna-so/todo-api/models/db"
 	"github.com/cna-so/todo-api/service"
@@ -61,14 +62,19 @@ func (us *UserApi) SignInUser(ctx *gin.Context) {
 		})
 		return
 	} else {
+		token, err := jwt.GenerateJwtToken(user.Email, user.Role, user.ID)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, err.Error())
+			return
+		}
 		ctx.JSON(http.StatusOK, gin.H{
 			"user": dto.UserSignInResponseDto{
 				ID:        user.ID,
 				Email:     user.Email,
-				Password:  user.Password,
 				FirstName: user.FirstName,
 				LastName:  user.LastName,
 			},
+			"Authorization": fmt.Sprintf("Bearer %s", token),
 		})
 	}
 }
