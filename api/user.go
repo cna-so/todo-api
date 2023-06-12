@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
-	"github.com/cna-so/todo-api/initializers"
-	dto "github.com/cna-so/todo-api/models/DTO"
+	"github.com/cna-so/todo-api/models/DTO"
 	"github.com/cna-so/todo-api/models/db"
+	"github.com/cna-so/todo-api/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,11 @@ import (
 	"github.com/cna-so/todo-api/helpers"
 )
 
-func CreateUserAccount(ctx *gin.Context) {
+type UserApi struct {
+	s service.UserService
+}
+
+func (us *UserApi) CreateUserAccount(ctx *gin.Context) {
 	var userDto dto.UserRequestDto
 	err := ctx.ShouldBindJSON(&userDto)
 	if err != nil {
@@ -21,6 +25,7 @@ func CreateUserAccount(ctx *gin.Context) {
 		})
 		return
 	}
+
 	userDto.Password, _ = helpers.GenerateHashPassword(userDto.Password)
 	user := db.Users{
 		Email:     userDto.Email,
@@ -29,13 +34,18 @@ func CreateUserAccount(ctx *gin.Context) {
 		LastName:  userDto.LastName,
 		Role:      "U",
 	}
-	if err := initializers.Db.Create(&user).Error; err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+	mUser, err := us.s.SignUpUser(user)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{
-		"message": fmt.Sprintf("user with email : `%s` successfully created ", user.Email),
+		"message": fmt.Sprintf("user with email : `%s` successfully created ", mUser.Email),
 	})
+}
+
+func (us *UserApi) SignInUser(ctx *gin.Context) {
+
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/cna-so/todo-api/api"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"os"
@@ -10,16 +11,18 @@ import (
 	"github.com/cna-so/todo-api/initializers"
 )
 
+var db *gorm.DB
+
 func init() {
 	initializers.LoadEnv()
-	initializers.ConnectToDatabase()
+	db = initializers.ConnectToDatabase()
 	initializers.InitMigrations()
 }
 
 func main() {
 	server := http.Server{
 		Addr:    os.Getenv("port"),
-		Handler: api.Routes(),
+		Handler: api.SetupRouter(db),
 	}
 	fmt.Printf("start server on port %s", os.Getenv("port"))
 	err := server.ListenAndServe()

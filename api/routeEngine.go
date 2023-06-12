@@ -1,16 +1,19 @@
 package api
 
 import (
+	"gorm.io/gorm"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Routes() *gin.Engine {
+func SetupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.New()
 	// middlewares
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	// setup api
+	userApi := initUserApi(db)
 	// test server
 	router.GET("/ping", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -20,6 +23,7 @@ func Routes() *gin.Engine {
 
 	// authorization (login - register )
 	auth := router.Group("/api/v1/auth")
-	auth.POST("/create", CreateUserAccount)
+	auth.POST("/signup", userApi.CreateUserAccount)
+	auth.POST("/login", userApi.SignInUser)
 	return router
 }
