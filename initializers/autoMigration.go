@@ -6,7 +6,7 @@ import (
 )
 
 func InitMigrations() {
-	err := Db.AutoMigrate(&db.Users{})
+	err := Db.AutoMigrate(&db.Users{}, &db.Tags{}, &db.Todo{})
 	if err != nil {
 		log.Fatal("error while migrations", err)
 	}
