@@ -56,5 +56,18 @@ func (us *TagApi) GetAllTags(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"tags": tags,
 	})
+}
 
+func (us *TagApi) GetTagByName(ctx *gin.Context) {
+	id := ctx.Param("name")
+	token := strings.Split(ctx.GetHeader("Authorization"), " ")
+	tokenValues, _ := jwt.GetValueFromJWT(token[1], []string{"user_id"})
+
+	tags, err := us.s.FindTagByName(id, tokenValues["user_id"])
+	if err != nil {
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"tag": tags,
+	})
 }

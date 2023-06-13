@@ -20,7 +20,7 @@ func TagServiceProvider(tagRepository repository.TagRepository) TagService {
 }
 
 func (ts *TagService) CreateTagService(tag dto.TagCreateRequestDto) (*db.Tags, int, error) {
-	if isExist := ts.repository.CheckTagExistByName(tag.Title); isExist == true {
+	if isExist := ts.repository.CheckTagExistByName(tag.Title, tag.UserID); isExist == true {
 		return nil, http.StatusConflict, errors.New(fmt.Sprintf("tag with name '%s' aleardy exist", tag.Title))
 	}
 	tagModel := db.Tags{Title: tag.Title, Color: tag.Color, UserID: tag.UserID, Description: tag.Description}
@@ -30,8 +30,21 @@ func (ts *TagService) CreateTagService(tag dto.TagCreateRequestDto) (*db.Tags, i
 	}
 	return createTag, http.StatusCreated, nil
 }
+
 func (ts *TagService) FindAllTags(userID string) ([]dto.TagResponseDto, error) {
 	tags, err := ts.repository.GetAllTags(userID)
+	if err != nil {
+		return nil, err
+	}
+	var resTags []dto.TagResponseDto
+	for _, tag := range tags {
+		resTags = append(resTags, dto.TagResponseDto{ID: tag.ID, Title: tag.Title, Description: tag.Description, Color: tag.Color})
+	}
+	return resTags, nil
+}
+
+func (ts *TagService) FindTagByName(name, userId string) ([]dto.TagResponseDto, error) {
+	tags, err := ts.repository.GetTagByName(name, userId)
 	if err != nil {
 		return nil, err
 	}
