@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"github.com/cna-so/todo-api/controllers/jwt"
+	"github.com/cna-so/todo-api/controllers/authorization/jwt"
 	"github.com/cna-so/todo-api/models/DTO"
 	"github.com/cna-so/todo-api/models/db"
 	"github.com/cna-so/todo-api/service"

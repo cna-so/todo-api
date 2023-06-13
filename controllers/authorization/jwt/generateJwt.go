@@ -2,12 +2,11 @@ package jwt
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"os"
 	"time"
 )
 
-func GenerateJwtToken(email, role string, userID uuid.UUID) (string, error) {
+func GenerateJwtToken(email, role string, userID string) (string, error) {
 	// Create a new token object, specifying signing method and the claims
 	// you would like it to contain.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
