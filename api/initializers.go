@@ -14,3 +14,11 @@ func initUserApi(db *gorm.DB) UserApi {
 	}
 	return userApi
 }
+func initTagApi(db *gorm.DB) TagApi {
+	tagRepository := repository.TagRepositoryProvider(db)
+	tagService := service.TagServiceProvider(tagRepository)
+	tagApi := TagApi{
+		s: tagService,
+	}
+	return tagApi
+}

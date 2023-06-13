@@ -16,8 +16,5 @@ func ParseToken(jwtToken string) (*jwt.Token, error) {
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 		return []byte(os.Getenv("SECRET")), nil
 	})
-
-	_, _ = GetValueFromJWT(token, []string{"email", "user_id"})
-
 	return token, nil
 }

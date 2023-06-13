@@ -39,7 +39,6 @@ func RequireLogin(c *gin.Context) {
 }
 
 func RequireRole(c *gin.Context) {
-
 	tokenString := strings.Split(c.GetHeader("token"), " ")
 	if tokenString[0] != "Bearer" {
 		c.AbortWithStatus(http.StatusUnauthorized)
