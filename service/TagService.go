@@ -30,3 +30,14 @@ func (ts *TagService) CreateTagService(tag dto.TagCreateRequestDto) (*db.Tags, i
 	}
 	return createTag, http.StatusCreated, nil
 }
+func (ts *TagService) FindAllTags(userID string) ([]dto.TagResponseDto, error) {
+	tags, err := ts.repository.GetAllTags(userID)
+	if err != nil {
+		return nil, err
+	}
+	var resTags []dto.TagResponseDto
+	for _, tag := range tags {
+		resTags = append(resTags, dto.TagResponseDto{ID: tag.ID, Title: tag.Title, Description: tag.Description, Color: tag.Color})
+	}
+	return resTags, nil
+}

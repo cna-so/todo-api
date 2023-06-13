@@ -6,7 +6,7 @@ type TagCreateRequestDto struct {
 	Description string `json:"description" gorm:"default:null"`
 	UserID      string `gorm:"not null"`
 }
-type TagCreateResponseDto struct {
+type TagResponseDto struct {
 	ID          string
 	Title       string `json:"title"`
 	Color       string `json:"color,omitempty"`

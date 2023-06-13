@@ -32,5 +32,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	})
 	tag := router.Group("/api/v1/tag/")
 	tag.POST("/create", jwt.RequireLogin, tagApi.CreateTag)
+	tag.GET("/all", jwt.RequireLogin, tagApi.GetAllTags)
 	return router
 }

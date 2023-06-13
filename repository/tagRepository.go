@@ -29,3 +29,11 @@ func (tr *TagRepository) CreateTag(tag db.Tags) (*db.Tags, error) {
 	}
 	return &tag, nil
 }
+func (tr *TagRepository) GetAllTags(userId string) ([]db.Tags, error) {
+	var tags []db.Tags
+	rows := tr.db.Where(db.Tags{UserID: userId}).Find(&tags)
+	if rows.Error != nil {
+		return nil, rows.Error
+	}
+	return tags, nil
+}
