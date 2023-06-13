@@ -24,7 +24,7 @@ func main() {
 		Addr:    os.Getenv("port"),
 		Handler: api.SetupRouter(db),
 	}
-	fmt.Printf("start server on port %s", os.Getenv("port"))
+	fmt.Printf("start server on port %s\n", os.Getenv("port"))
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)

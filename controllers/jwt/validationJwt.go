@@ -6,12 +6,13 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
 func RequireLogin(c *gin.Context) {
-	tokenString := c.GetHeader("authorization")
-	if tokenString == "" {
+	tokenString := strings.Split(c.GetHeader("Authorization"), " ")
+	if tokenString[0] != "Bearer" {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "token doesn't exist",
@@ -19,15 +20,7 @@ func RequireLogin(c *gin.Context) {
 		return
 	}
 
-	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-
-		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return []byte(os.Getenv("SECRET")), nil
-	})
+	token, _ := ParseToken(tokenString[1])
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
@@ -46,8 +39,9 @@ func RequireLogin(c *gin.Context) {
 }
 
 func RequireRole(c *gin.Context) {
-	tokenString := c.GetHeader("token")
-	if tokenString == "" {
+
+	tokenString := strings.Split(c.GetHeader("token"), " ")
+	if tokenString[0] != "Bearer" {
 		c.AbortWithStatus(http.StatusUnauthorized)
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "token doesn't exist",
@@ -55,7 +49,7 @@ func RequireRole(c *gin.Context) {
 		return
 	}
 
-	token, _ := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	token, _ := jwt.Parse(tokenString[1], func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
