@@ -11,5 +11,5 @@ type Todo struct {
 	Status      uint8     `gorm:"required;default:1"`
 	ExpireDate  time.Time `json:"expire_date"`
 	UserID      string
-	TagID       string
+	Tags        []*Tags `gorm:"many2many:todos_tags"`
 }

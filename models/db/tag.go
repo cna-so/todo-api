@@ -6,5 +6,4 @@ type Tags struct {
 	Description string `json:"description"`
 	Color       string `json:"color"`
 	UserID      string
-	Todos       []Todo `gorm:"foreignKey:TagID"`
 }
