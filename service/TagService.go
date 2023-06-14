@@ -54,3 +54,11 @@ func (ts *TagService) FindTagByName(name, userId string) ([]dto.TagResponseDto, 
 	}
 	return resTags, nil
 }
+
+func (ts *TagService) DeleteTagById(tagId, userId string) error {
+	err := ts.repository.DeleteTagById(tagId, userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

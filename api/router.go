@@ -34,5 +34,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	tag.POST("/create", jwt.RequireLogin, tagApi.CreateTag)
 	tag.GET("/all", jwt.RequireLogin, tagApi.GetAllTags)
 	tag.GET("/search/:name", jwt.RequireLogin, tagApi.GetTagByName)
+	tag.DELETE("/delete/:id", jwt.RequireLogin, tagApi.DeleteTagById)
 	return router
 }

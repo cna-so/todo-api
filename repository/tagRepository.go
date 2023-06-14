@@ -47,3 +47,10 @@ func (tr *TagRepository) GetTagByName(name, userId string) ([]db.Tags, error) {
 	//fmt.Println(tag)
 	return tags, nil
 }
+func (tr *TagRepository) DeleteTagById(id, userId string) error {
+	dt := tr.db.Where(db.Tags{UserID: userId}).Where("id", id).Delete(&db.Tags{})
+	if dt.Error != nil {
+		return dt.Error
+	}
+	return nil
+}

@@ -71,3 +71,17 @@ func (us *TagApi) GetTagByName(ctx *gin.Context) {
 		"tag": tags,
 	})
 }
+
+func (us *TagApi) DeleteTagById(ctx *gin.Context) {
+	tagId := ctx.Param("id")
+	token := strings.Split(ctx.GetHeader("Authorization"), " ")
+	tokenValues, _ := jwt.GetValueFromJWT(token[1], []string{"user_id"})
+	err := us.s.DeleteTagById(tagId, tokenValues["user_id"])
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadGateway, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, "")
+}
