@@ -1,13 +1,17 @@
 package dto
 
-import "time"
+import (
+	"github.com/cna-so/todo-api/models/db"
+	"time"
+)
 
 type TodoCreateRequestDto struct {
-	Title       string    `json:"title" binding:"required" gorm:"required"`
-	Description string    `json:"description"`
-	Status      uint8     `json:"status" gorm:"required;default:1"`
-	ExpireDate  time.Time `json:"expire_date"`
-	TagID       string    `json:"tag_id"`
+	Title       string                 `json:"title" binding:"required" gorm:"required"`
+	Description string                 `json:"description,omitempty"`
+	Status      uint8                  `json:"status,omitempty" gorm:"required;default:1"`
+	ExpireDate  time.Time              `json:"expire_date,omitempty"`
+	Tags        []TodoCreateTagRequest `json:"tags,omitempty"`
+	UserID      string                 `json:"user_id,omitempty"`
 }
 type TodoResponseDto struct {
 	ID          string    `json:"id"`
@@ -16,5 +20,9 @@ type TodoResponseDto struct {
 	Description string    `json:"description"`
 	Status      uint8     `json:"status" `
 	ExpireDate  time.Time `json:"expire_date"`
-	TagsID      []string  `json:"tags_id"`
+	Tags        []*db.Tag `json:"tags"`
+}
+
+type TodoCreateTagRequest struct {
+	ID string `json:"id"`
 }

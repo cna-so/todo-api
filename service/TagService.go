@@ -19,11 +19,11 @@ func TagServiceProvider(tagRepository repository.TagRepository) TagService {
 	}
 }
 
-func (ts *TagService) CreateTagService(tag dto.TagCreateRequestDto) (*db.Tags, int, error) {
+func (ts *TagService) CreateTagService(tag dto.TagCreateRequestDto) (*db.Tag, int, error) {
 	if isExist := ts.repository.CheckTagExistByName(tag.Title, tag.UserID); isExist == true {
 		return nil, http.StatusConflict, errors.New(fmt.Sprintf("tag with name '%s' aleardy exist", tag.Title))
 	}
-	tagModel := db.Tags{Title: tag.Title, Color: tag.Color, UserID: tag.UserID, Description: tag.Description}
+	tagModel := db.Tag{Title: tag.Title, Color: tag.Color, UserID: tag.UserID, Description: tag.Description}
 	createTag, err := ts.repository.CreateTag(tagModel)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err

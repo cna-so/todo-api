@@ -41,5 +41,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	tag.DELETE("/delete/:id", jwt.RequireLogin, tagApi.DeleteTagById)
 	// todo
 	todo.GET("/all", todoApi.GetAllTodo)
+	todo.POST("/create", todoApi.CreateTodo)
 	return router
 }

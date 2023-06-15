@@ -21,8 +21,17 @@ func (ts *TodoService) GetAllTodos(userId string) ([]dto.TodoResponseDto, error)
 		return nil, err
 	} else {
 		for _, todo := range *dbTodos {
-			resTodos = append(resTodos, dto.TodoResponseDto{ID: todo.ID, Title: todo.Title, Status: todo.Status, CreateAt: todo.CreateAt, ExpireDate: todo.ExpireDate})
+
+			resTodos = append(resTodos, dto.TodoResponseDto{
+				ID: todo.ID, Title: todo.Title, Status: todo.Status,
+				CreateAt: todo.CreateAt, ExpireDate: todo.ExpireDate,
+				Tags: todo.Tags,
+			})
 		}
 	}
 	return resTodos, nil
+}
+
+func (ts *TodoService) CreateTodo(todo dto.TodoCreateRequestDto) {
+	ts.repository.CreateTodo(todo)
 }
