@@ -53,3 +53,15 @@ func (ts *TodoService) CreateTodo(todo dto.TodoCreateRequestDto) (dto.TodoRespon
 		return resTodos, err
 	}
 }
+
+func (ts *TodoService) ChangeTodoStatus(todoStatus dto.TodoChangeStatusRequestDto) (dto.TodoResponseDto, error) {
+	todo, err := ts.repository.ChangeTodoStatus(todoStatus)
+	if err != nil {
+		return dto.TodoResponseDto{}, err
+	}
+	return dto.TodoResponseDto{
+		ID: todo.ID, Title: todo.Title, Status: todo.Status,
+		CreateAt: todo.CreateAt, ExpireDate: todo.ExpireDate,
+		Tags: todo.Tags,
+	}, nil
+}

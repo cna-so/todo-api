@@ -23,6 +23,12 @@ type TodoResponseDto struct {
 	Tags        []*db.Tag `json:"tags"`
 }
 
+type TodoChangeStatusRequestDto struct {
+	ID     string `json:"id" binding:"required"`
+	Status uint8  `json:"status" binding:"required"`
+	UserID string `json:"user_id,omitempty"`
+}
+
 type TodoCreateTagRequest struct {
 	ID string `json:"id"`
 }

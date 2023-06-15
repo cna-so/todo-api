@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"fmt"
+	dto "github.com/cna-so/todo-api/models/DTO"
 	"gorm.io/gorm"
 
 	"github.com/cna-so/todo-api/models/db"
@@ -47,6 +48,19 @@ func (tr *TodoRepository) CreateTodo(todo db.Todo) (*db.Todo, error) {
 	if err := tr.db.Create(&todo).Error; err != nil {
 		return nil, err
 	} else {
+		return &todo, nil
+	}
+}
+
+func (tr *TodoRepository) ChangeTodoStatus(todoStatus dto.TodoChangeStatusRequestDto) (*db.Todo, error) {
+	var todo db.Todo
+	if err := tr.db.Where("id", todoStatus.ID).First(&todo, "user_id", todoStatus.UserID).Error; err != nil {
+		return nil, err
+	} else {
+		todo.Status = todoStatus.Status
+		if err := tr.db.Where(db.Todo{UserID: todoStatus.UserID, BaseModel: db.BaseModel{ID: todoStatus.ID}}).Save(&todo).Error; err != nil {
+			return nil, err
+		}
 		return &todo, nil
 	}
 }
