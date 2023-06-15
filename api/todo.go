@@ -40,5 +40,12 @@ func (ta *TodoApi) CreateTodo(ctx *gin.Context) {
 	token := strings.Split(ctx.GetHeader("Authorization"), " ")
 	tokenValues, _ := jwt.GetValueFromJWT(token[1], []string{"user_id"})
 	todo.UserID = tokenValues["user_id"]
-	ta.ts.CreateTodo(todo)
+	createdTodo, err := ta.ts.CreateTodo(todo)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotAcceptable, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, createdTodo)
 }

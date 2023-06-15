@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
-	dto "github.com/cna-so/todo-api/models/DTO"
 	"gorm.io/gorm"
 
 	"github.com/cna-so/todo-api/models/db"
@@ -27,15 +27,26 @@ func (tr *TodoRepository) FindAllTodos(userId string) (*[]db.Todo, error) {
 	}
 }
 
-func (tr *TodoRepository) CreateTodo(todo dto.TodoCreateRequestDto) {
-	test := db.Todo{
-		UserID: "5d883b8e-0f85-409e-875e-cc1a31d648d2",
-		Title:  "test",
-		Tags: []*db.Tag{
-			{BaseModel: db.BaseModel{ID: "081b5fe0-4e3f-4852-a7e3-151a7ce082ad"}},
-			{BaseModel: db.BaseModel{ID: "5c344cab-ad36-4ba9-a070-5da5a615b1ab"}},
-		},
+func (tr *TodoRepository) CheckTagAccessById(tags []*db.Tag) bool {
+	var counts int64
+	for _, tag := range tags {
+		var count int64
+		tr.db.Model(&db.Tag{}).Where(db.Tag{BaseModel: db.BaseModel{ID: tag.ID}}).Where(db.Tag{UserID: tag.UserID}).Count(&count)
+		counts += count
 	}
-	tr.db.Create(&test)
-	fmt.Println(todo)
+	fmt.Println(len(tags), counts)
+	return int64(len(tags)) == counts
+}
+
+func (tr *TodoRepository) CreateTodo(todo db.Todo) (*db.Todo, error) {
+	isHaveAccess := tr.CheckTagAccessById(todo.Tags)
+	fmt.Println(isHaveAccess)
+	if isHaveAccess != true {
+		return nil, errors.New("tags id doesn't exist")
+	}
+	if err := tr.db.Create(&todo).Error; err != nil {
+		return nil, err
+	} else {
+		return &todo, nil
+	}
 }
