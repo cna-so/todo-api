@@ -3,9 +3,10 @@ package repository
 import (
 	"errors"
 	"fmt"
-	dto "github.com/cna-so/todo-api/models/DTO"
+
 	"gorm.io/gorm"
 
+	dto "github.com/cna-so/todo-api/models/DTO"
 	"github.com/cna-so/todo-api/models/db"
 )
 
@@ -41,7 +42,6 @@ func (tr *TodoRepository) CheckTagAccessById(tags []*db.Tag) bool {
 
 func (tr *TodoRepository) CreateTodo(todo db.Todo) (*db.Todo, error) {
 	isHaveAccess := tr.CheckTagAccessById(todo.Tags)
-	fmt.Println(isHaveAccess)
 	if isHaveAccess != true {
 		return nil, errors.New("tags id doesn't exist")
 	}

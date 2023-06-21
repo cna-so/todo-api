@@ -16,7 +16,7 @@ var db *gorm.DB
 func init() {
 	initializers.LoadEnv()
 	db = initializers.ConnectToDatabase()
-	initializers.InitMigrations()
+	initializers.InitMigrations(db)
 }
 
 func main() {

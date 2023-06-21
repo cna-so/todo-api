@@ -24,8 +24,7 @@ var (
 
 func ConnectToDatabase() *gorm.DB {
 	var err error
-	dsn := "host=localhost user=cna password=1234 dbname=todo_db port=5432 sslmode=disable"
-	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Db, err = gorm.Open(postgres.Open(dbCfg.DbValues()), &gorm.Config{})
 	if err != nil {
 		log.Fatal("error while connecting to postgresSQL ", err)
 	}
